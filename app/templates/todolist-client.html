@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% include 'nav.html' %}
+{% include 'flash.html' %}
 <div class="well">
 	<form class="form-hotizontal" action="" method="post" name="addTodo">
 		{{ form.hidden_tag() }}
@@ -27,7 +28,7 @@
 			</div>
 			<div class="controls">
 				<label class="checkbox" for="forKara">
-				{{ form.forBrad }} Kara
+				{{ form.forKara }} Kara
 			</label>
 			</div>
 		</div>

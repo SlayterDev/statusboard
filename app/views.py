@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
+from datetime import datetime
 from .forms import LoginForm, AddTodoForm
 from .models import Todo, User
 
@@ -32,18 +33,7 @@ def before_request():
 @app.route('/index')
 @login_required
 def index():
-	todos = [
-		{
-			'title': 'Take out the trash',
-			'assigned': 'Brad',
-			'done': False
-		},
-		{
-			'title': 'Clean the litter box',
-			'assigned': 'Kara',
-			'done': True
-		}
-	]
+	todos = reversed(Todo.query.all())
 
 	return render_template('index.html', title='Home', user=g.user,
 							todos=todos)
@@ -64,23 +54,28 @@ def login():
 		return after_login(form.username.data, form.password.data)
 	return render_template('login.html', title='Login', form=form)
 
-@app.route('/todolist')
+@app.route('/todolist', methods=['GET', 'POST'])
 @login_required
 def todolist():
-	todos = [
-		{
-			'title': 'Take out the trash',
-			'assigned': 'Brad',
-			'done': False
-		},
-		{
-			'title': 'Clean the litter box',
-			'assigned': 'Kara',
-			'done': True
-		}
-	]
+	todos = reversed(Todo.query.all())
 
 	form = AddTodoForm()
+	if form.validate_on_submit():
+		assigned = ""
+		if form.forBrad.data:
+			assigned += "Brad "
+		if form.forKara.data:
+			if "Brad" in assigned:
+				assigned += "and "
+			assigned += "Kara "
+
+		t = Todo(title=form.title.data, description=form.description.data,
+				assigned=assigned, timestamp=datetime.utcnow(),
+				creator=g.user.username, done=False)
+		db.session.add(t)
+		db.session.commit()
+		flash('Your todo item has been added!')
+		return redirect(url_for('todolist'))
 
 	return render_template('todolist-client.html', title='Todo',
 							user=g.user, todos=todos, form=form)

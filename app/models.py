@@ -13,6 +13,8 @@ class Todo(db.Model):
 		return '<Todo %r>' % (self.title)
 
 class User():
+	username = ""
+
 	def is_authenticated(self):
 		return True
 
