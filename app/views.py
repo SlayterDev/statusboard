@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from .forms import LoginForm
+from .forms import LoginForm, AddTodoForm
 from .models import Todo, User
 
 @lm.user_loader
@@ -79,5 +79,8 @@ def todolist():
 			'done': True
 		}
 	]
+
+	form = AddTodoForm()
+
 	return render_template('todolist-client.html', title='Todo',
-							user=g.user, todos=todos)
+							user=g.user, todos=todos, form=form)

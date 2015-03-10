@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 {% include 'nav.html' %}
+<div class="well">
+	<form class="form-hotizontal" action="" method="post" name="addTodo">
+		{{ form.hidden_tag() }}
+		<div class="control-group{% if form.errors.title %} error{% endif %}">
+			<label class="control-label" for="title">Title:</label>
+			<div class="controls">
+				{{ form.title(size=30,maxlength=140) }}
+				{% for error in form.errors.title %}
+					<span class="help-inline">[{{error}}]</span>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="description">Description:</label>
+			<div class="controls">
+				{{ form.description(size=30,maxlength=280) }}
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<label class="checkbox" for="forBrad">
+				{{ form.forBrad }} Brad
+			</label>
+			</div>
+			<div class="controls">
+				<label class="checkbox" for="forKara">
+				{{ form.forBrad }} Kara
+			</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input class="btn btn-primary" type="submit" value="Add Todo Item!">
+			</div>
+		</div>
+	</form>
+</div>
 {% for todo in todos %}
 	{% include 'todo.html' %}
 {% endfor %}
