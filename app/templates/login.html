@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<br><br>
+{% include 'flash.html' %}
+<div class="well">
+	<h3>Please Log In</h3>
+	<form class="form" action="" method="post" name="login">
+		{{form.hidden_tag()}}
+		<div class="help-block">Enter your login info below</div>
+		<div class="control-group{% if form.errors.username %} error{% endif %}">
+			<label class="control-label" for="username">Username</label>
+			<div class="controls">
+				{{ form.username(size=80, class="span4") }}
+				{% for error in form.errors.username %}
+					<span class="help-inline">[{{eror}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="control-group{% if form.errors.password %} error{% endif %}">
+			<label class="control-label" for="username">Password</label>
+			<div class="controls">
+				{{ form.password(size=80, class="span4") }}
+				{% for error in form.errors.password %}
+					<span class="help-inline">[{{eror}}]</span><br>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<label class="checkbox" for="remember_me">
+					{{ form.remember_me }} Remember Me
+				</label>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input class="btn btn-primary" type="submit" value="Sign In">
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}

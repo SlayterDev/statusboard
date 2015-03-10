@@ -1,0 +1,12 @@
+<table class="table table-hover">
+	<tr>
+		<td>
+			<p><b>{{ todo.assigned }}: </b>
+			{% if todo.done %}
+			<strike>{{ todo.title }}</strike>
+			{% else %}
+			{{ todo.title }}
+			{% endif %}</p>
+		</td>
+	</tr>
+</table>
