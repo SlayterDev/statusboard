@@ -9,3 +9,6 @@ WTF_CSRF_ENABLED = True
 SECRET_KEY = 'lets-do-the-fork-in-the-garbage-disposal'
 
 ITEMS_PER_PAGE = 3
+
+WHOOSH_BASE = os.path.join(basedir, 'search.db')
+MAX_SEARCH_RESULTS = 50

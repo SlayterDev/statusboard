@@ -12,3 +12,6 @@ class AddTodoForm(Form):
 	description = StringField('description', validators=[])
 	forBrad = BooleanField('forBrad', default=False)
 	forKara = BooleanField('forKara', default=False)
+
+class SearchForm(Form):
+	search = StringField('search', validators=[DataRequired()])

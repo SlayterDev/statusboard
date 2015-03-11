@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for, session, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
 from datetime import datetime
-from config import ITEMS_PER_PAGE
-from .forms import LoginForm, AddTodoForm
+from config import ITEMS_PER_PAGE, MAX_SEARCH_RESULTS
+from .forms import LoginForm, AddTodoForm, SearchForm
 from .models import Todo, User
 
 @lm.user_loader
@@ -29,6 +29,7 @@ def after_login(username, password):
 @app.before_request
 def before_request():
 	g.user = current_user
+	g.search_form = SearchForm()
 
 @app.route('/')
 @app.route('/index')
@@ -105,3 +106,18 @@ def delete(id):
 	db.session.delete(todo)
 	db.session.commit()
 	return redirect(url_for('todolist'))
+
+@app.route('/search', methods=['POST'])
+@login_required
+def search():
+	if not g.search_form.validate_on_submit():
+		return redirect(url_for('todolist'))
+	return redirect(url_for('search_results', 
+							query=g.search_form.search.data))
+
+@app.route('/search_results/<query>')
+@login_required
+def search_results(query):
+	results = Todo.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
+	return render_template('search_results.html', query=query,
+							results=results)
