@@ -24,6 +24,18 @@ class Todo(db.Model):
 if enable_search:
 	whooshalchemy.whoosh_index(app, Todo)
 
+class Event(db.Model):
+	__searchable__ = ['title']
+
+	id = db.Column(db.Integer, primary_key=True)
+	title = db.Column(db.String(140))
+	date = db.Column(db.DateTime)
+	assigned = db.Column(db.String(64))
+	creator = db.Column(db.String(64))
+
+	def __repr__(self):
+		return '<Event %r>' % (self.title)
+
 class User():
 	username = ""
 
