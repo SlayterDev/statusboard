@@ -8,6 +8,10 @@
 			{{ todo.title }}
 			{% endif %}</p>
 			<p style="padding-left:3em; color: grey;">{{ todo.description }}</p>
+			<p style="padding-left:3em;"><a href="{{ url_for('delete', id=todo.id) }}">Delete </a>
+			{% if not todo.done %}
+			| <a href="{{ url_for('markdone', id=todo.id) }}">Done</a></p>
+			{% endif %}
 		</td>
 	</tr>
 </table>

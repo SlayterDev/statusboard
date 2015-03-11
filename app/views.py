@@ -33,7 +33,7 @@ def before_request():
 @app.route('/index')
 @login_required
 def index():
-	todos = reversed(Todo.query.all())
+	todos = reversed(Todo.query.paginate(1, 3).items)
 
 	return render_template('index.html', title='Home', user=g.user,
 							todos=todos)
@@ -79,3 +79,26 @@ def todolist():
 
 	return render_template('todolist-client.html', title='Todo',
 							user=g.user, todos=todos, form=form)
+
+@app.route('/markdone/<int:id>')
+@login_required
+def markdone(id):
+	todo = Todo.query.get(id)
+	if todo is None:
+		flash('This item does not exist')
+		return redirect(url_for('todolist'))
+	todo.done = 1
+	db.session.add(todo)
+	db.session.commit()
+	return redirect(url_for('todolist'))
+
+@app.route('/delete/<int:id>')
+@login_required
+def delete(id):
+	todo = Todo.query.get(id)
+	if todo is None:
+		flash('This item does not exist')
+		return redirect(url_for('todolist'))
+	db.session.delete(todo)
+	db.session.commit()
+	return redirect(url_for('todolist'))
