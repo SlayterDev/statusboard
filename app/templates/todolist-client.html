@@ -39,7 +39,19 @@
 		</div>
 	</form>
 </div>
-{% for todo in todos %}
+{% for todo in todos.items %}
 	{% include 'todo.html' %}
 {% endfor %}
+<ul class="pager">
+	{% if todos.has_prev %}
+	<li class="previous"><a href="{{ url_for('todolist', page=todos.prev_num) }}">Newer items</a></li>
+	{% else %}
+	<li class="previous disabled"><a href="#">Newer items</a></li>
+	{% endif %}
+	{% if todos.has_next %}
+	<li class="next"><a href="{{ url_for('todolist', page=todos.next_num) }}">Older items</a></li>
+	{% else %}
+	<li class="next disabled"><a href="#">Older items</a></li>
+	{% endif %}
+</ul>
 {% endblock %}

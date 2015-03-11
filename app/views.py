@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for, session, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
 from datetime import datetime
+from config import ITEMS_PER_PAGE
 from .forms import LoginForm, AddTodoForm
 from .models import Todo, User
 
@@ -55,9 +56,11 @@ def login():
 	return render_template('login.html', title='Login', form=form)
 
 @app.route('/todolist', methods=['GET', 'POST'])
+@app.route('/todolist/<int:page>', methods=['GET', 'POST'])
 @login_required
-def todolist():
-	todos = reversed(Todo.query.all())
+def todolist(page=1):
+	todos = Todo.query.order_by(Todo.timestamp.desc())
+	todos = todos.paginate(page, ITEMS_PER_PAGE, False)
 
 	form = AddTodoForm()
 	if form.validate_on_submit():

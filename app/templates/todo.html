@@ -8,10 +8,15 @@
 			{{ todo.title }}
 			{% endif %}</p>
 			<p style="padding-left:3em; color: grey;">{{ todo.description }}</p>
-			<p style="padding-left:3em;"><a href="{{ url_for('delete', id=todo.id) }}">Delete </a>
+			<p style="padding-left:3em;">
+			Added {{ momentjs(todo.timestamp).fromNow() }} | 
+
 			{% if not todo.done %}
-			| <a href="{{ url_for('markdone', id=todo.id) }}">Done</a></p>
+				<a href="{{ url_for('markdone', id=todo.id) }}">Done</a> | 
 			{% endif %}
+				<a href="{{ url_for('delete', id=todo.id) }}">Delete </a>
+			</p>
+			
 		</td>
 	</tr>
 </table>
