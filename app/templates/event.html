@@ -1,0 +1,13 @@
+<table class="table table-hover">
+	<tr>
+		<td>
+			<p><b>{{ event.assigned }}: </b>
+			{{ event.title }}
+			<p style="padding-left:3em;">
+			{{ momentjs(event.date).calendar() }} | 
+			<a href="{{ url_for('deleteevent', id=event.id) }}">Delete </a>
+			</p>
+			
+		</td>
+	</tr>
+</table>
