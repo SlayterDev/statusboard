@@ -14,7 +14,7 @@
 			{% if not todo.done %}
 				<a href="{{ url_for('markdone', id=todo.id) }}">Done</a> | 
 			{% endif %}
-				<a href="{{ url_for('delete', id=todo.id) }}">Delete </a>
+				<a href="{{ url_for('deletetodo', id=todo.id) }}">Delete </a>
 			</p>
 			
 		</td>

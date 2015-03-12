@@ -3,8 +3,9 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import app, db, lm
 from datetime import datetime
 from config import ITEMS_PER_PAGE, MAX_SEARCH_RESULTS
-from .forms import LoginForm, AddTodoForm, SearchForm
-from .models import Todo, User
+from .forms import LoginForm, AddTodoForm, SearchForm, EventForm
+from .models import Todo, User, Event
+import pytz
 
 @lm.user_loader
 def load_user(id):
@@ -35,10 +36,11 @@ def before_request():
 @app.route('/index')
 @login_required
 def index():
-	todos = reversed(Todo.query.paginate(1, 3).items)
+	todos = reversed(Todo.query.all())
+	events = Event.query.order_by(Event.date.desc())
 
 	return render_template('index.html', title='Home', user=g.user,
-							todos=todos)
+							todos=todos, events=events)
 
 @app.route('/logout')
 @login_required
@@ -84,6 +86,38 @@ def todolist(page=1):
 	return render_template('todolist-client.html', title='Todo',
 							user=g.user, todos=todos, form=form)
 
+@app.route('/calendar', methods=['GET', 'POST'])
+@login_required
+def calendar():
+	events = reversed(Event.query.all())
+
+	form = EventForm()
+	if form.validate_on_submit():
+		assigned = ""
+		if form.forBrad.data:
+			assigned += "Brad "
+		if form.forKara.data:
+			if "Brad" in assigned:
+				assigned += "and "
+			assigned += "Kara "
+
+		local = pytz.timezone("US/Central")
+		date = datetime.combine(form.date.data, form.time.data)
+		local_dt = local.localize(date, is_dst=None)
+		date = local_dt.astimezone(pytz.utc)
+
+		event = Event(title=form.title.data, date=date,
+						assigned=assigned, 
+						creator=g.user.username)
+		db.session.add(event)
+		db.session.commit()
+		flash('Your event has been added')
+		return redirect(url_for('calendar'))
+
+	return render_template('calendar-client.html', title='Calendar',
+							user=g.user, events=events,
+							form=form)
+
 @app.route('/markdone/<int:id>')
 @login_required
 def markdone(id):
@@ -96,9 +130,9 @@ def markdone(id):
 	db.session.commit()
 	return redirect(url_for('todolist'))
 
-@app.route('/delete/<int:id>')
+@app.route('/deletetodo/<int:id>')
 @login_required
-def delete(id):
+def deletetodo(id):
 	todo = Todo.query.get(id)
 	if todo is None:
 		flash('This item does not exist')
@@ -106,6 +140,17 @@ def delete(id):
 	db.session.delete(todo)
 	db.session.commit()
 	return redirect(url_for('todolist'))
+
+@app.route('/deleteevent/<int:id>')
+@login_required
+def deleteevent(id):
+	event = Event.query.get(id)
+	if event is None:
+		flash('This event does not exist')
+		return redirect(url_for('calendar'))
+	db.session.delete(event)
+	db.session.commit()
+	return redirect(url_for('calendar'))
 
 @app.route('/search', methods=['POST'])
 @login_required
