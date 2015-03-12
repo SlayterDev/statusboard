@@ -9,12 +9,14 @@
     <a class="brand" href="{{ url_for('todolist') }}">statusboard</a>
       <ul class="nav">
         <li><a href="{{ url_for('todolist') }}">Home</a></li>
+        <li><a href="{{ url_for('calendar') }}">Calendar</a></li>
         {% if g.user.is_authenticated() %}
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
         {% endif %}
       </ul>
     <div class="nav-collapse collapse">
       {% if g.user.is_authenticated() %}
+        <form class="navbar-search pull-right" action="{{ url_for('search') }}" method="post" name="search">{{g.search_form.hidden_tag()}}{{g.search_form.search(size=20,placeholder="Search",class="search-query")}}</form>
       {% endif %}
     </div>
   </div>

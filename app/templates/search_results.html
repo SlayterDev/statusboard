@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'nav.html' %}
+{% include 'flash.html' %}
+<h1>Results for "{{ query }}":</h1>
+{% for todo in results %}
+	{% include 'todo.html' %}
+{% endfor %}
+{% endblock %}
