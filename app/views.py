@@ -36,10 +36,11 @@ def before_request():
 @app.route('/index')
 @login_required
 def index():
-	todos = reversed(Todo.query.paginate(1, 3).items)
+	todos = reversed(Todo.query.all())
+	events = Event.query.order_by(Event.date.desc())
 
 	return render_template('index.html', title='Home', user=g.user,
-							todos=todos)
+							todos=todos, events=events)
 
 @app.route('/logout')
 @login_required

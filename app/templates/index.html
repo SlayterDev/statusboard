@@ -1,13 +1,51 @@
-{% extends "base.html" %}
-{% block content %}
-{% include 'flash.html' %}
-	<h1>Hello, {{ user.username }}</h1>
-	<br>
-	<h4>Todo List:</h4>
-	<div style="width: 300px;">
-	{% for todo in todos %}
-		{% include 'todo.html' %}
-	{% endfor %}
-	</div>
-	<a href="{{url_for('logout')}}">Logout</a>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" media="screen" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/moment.min.js"></script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
+    </script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js">
+    </script>
+    <script type="text/javascript" src="/static/js/clock.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if title %}
+    <title>{{ title }} - statusboard</title>
+    {% else %}
+    <title>Welcome to statusboard</title>
+    {% endif %}
+  </head>
+  <body onload="startTime()">
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+			{% include 'flash.html' %}
+			<h1>Hello, Brad and/or Kara</h1>
+			<br>
+			<div style="width: 300px; float: left;">
+				<h4>Todo List:</h4>
+				{% for todo in todos %}
+					{% include 'todo.html' %}
+				{% endfor %}
+				<a href="{{url_for('logout')}}">Logout</a>
+			</div>
+			<div style="width: 300px; float: left;">
+				<h4>Calendar:</h4>
+				{% for event in events %}
+					{% include 'event.html' %}
+				{% endfor %}
+			</div>
+			<div style="width: 300px; height: 400px; float: left;">
+				<div id="txt" style="vertical-align: middle; display: table-cell;"></div>
+			</div>
+		</div>
+      </div>
+    </div>
+  </body>
+</html>
