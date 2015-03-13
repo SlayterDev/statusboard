@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, Length
 from wtforms.fields.html5 import DateField
 from wtforms.widgets.html5 import TimeInput
 import datetime
@@ -62,3 +62,8 @@ class EventForm(Form):
 						validators=[DataRequired()])
 	forBrad = BooleanField('forBrad', default=False)
 	forKara = BooleanField('forKara', default=False)
+
+class NoteForm(Form):
+	title = StringField('title', validators=[])
+	body = TextAreaField('body', validators=[DataRequired(), Length(min=1, max=600)])
+

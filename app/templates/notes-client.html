@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'nav.html' %}
+{% include 'flash.html' %}
+<h2>Notes</h2>
+<div class="well">
+	<form class="form-hotizontal" action="" method="post" name="addTodo">
+		{{ form.hidden_tag() }}
+		<div class="control-group{% if form.errors.title %} error{% endif %}">
+			<label class="control-label" for="title">Title:</label>
+			<div class="controls">
+				{{ form.title(size=30,maxlength=140,placeholder="Optional") }}
+				{% for error in form.errors.title %}
+					<span class="help-inline">[{{error}}]</span>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="body">Note:</label>
+			<div class="controls">
+				{{ form.body(cols=32, rows=4) }}
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<input class="btn btn-primary" type="submit" value="Add Note!">
+			</div>
+		</div>
+	</form>
+</div>
+<table class="table table-hover">
+{% for note in notes.items %}
+	{% include 'note.html' %}
+{% endfor %}
+</table>
+{% endblock %}

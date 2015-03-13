@@ -10,6 +10,7 @@
       <ul class="nav">
         <li><a href="{{ url_for('todolist') }}">Home</a></li>
         <li><a href="{{ url_for('calendar') }}">Calendar</a></li>
+        <li><a href="{{ url_for('notes') }}">Notes</a></li>
         {% if g.user.is_authenticated() %}
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
         {% endif %}

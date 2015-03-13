@@ -36,6 +36,24 @@ class Event(db.Model):
 	def __repr__(self):
 		return '<Event %r>' % (self.title)
 
+if enable_search:
+	whooshalchemy.whoosh_index(app, Event)
+
+class Note(db.Model):
+	__searchable__ = ['body']
+
+	id = db.Column(db.Integer, primary_key=True)
+	title = db.Column(db.String(140))
+	body = db.Column(db.String(600))
+	creator = db.Column(db.String(64))
+	timestamp = db.Column(db.DateTime)
+
+	def __repr__(self):
+		return '<Note %r>' % (self.body)
+
+if enable_search:
+	whooshalchemy.whoosh_index(app, Note)
+
 class User():
 	username = ""
 
