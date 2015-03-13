@@ -1,0 +1,11 @@
+<tr>
+	<td>
+		<p><b>{% if note.creator %}{{note.creator}} says: {% endif %}{% if note.title %}{{note.title}}{% endif %}</b>
+		</p>
+		<p style="padding-left:3em;">{{note.body}}</p>
+		<p style="padding-left:3em;">
+		{{ momentjs(note.timestamp).fromNow() }} | 
+		<a href="{{ url_for('deletenote', id=note.id) }}">Delete </a>
+		</p>
+	</td>
+</tr>

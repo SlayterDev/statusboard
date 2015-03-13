@@ -3,8 +3,8 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import app, db, lm
 from datetime import datetime
 from config import ITEMS_PER_PAGE, MAX_SEARCH_RESULTS
-from .forms import LoginForm, AddTodoForm, SearchForm, EventForm
-from .models import Todo, User, Event
+from .forms import LoginForm, AddTodoForm, SearchForm, EventForm, NoteForm
+from .models import Todo, User, Event, Note
 import pytz
 
 @lm.user_loader
@@ -38,9 +38,10 @@ def before_request():
 def index():
 	todos = reversed(Todo.query.all())
 	events = Event.query.order_by(Event.date.desc())
+	notes = Note.query.order_by(Note.timestamp.desc())
 
 	return render_template('index.html', title='Home', user=g.user,
-							todos=todos, events=events)
+							todos=todos, events=events, notes=notes)
 
 @app.route('/logout')
 @login_required
@@ -118,6 +119,31 @@ def calendar():
 							user=g.user, events=events,
 							form=form)
 
+@app.route('/notes', methods=['GET', 'POST'])
+@app.route('/notes/<int:id>', methods=['GET', 'POST'])
+@login_required
+def notes(page=1):
+	notes = Note.query.order_by(Note.timestamp.desc())
+	notes = notes.paginate(page, ITEMS_PER_PAGE, False)
+
+	form = NoteForm()
+	if form.validate_on_submit():
+		if g.user.username == "" or g.user.username is None:
+			creator = 'Brad'
+		else:
+			creator = g.user.username
+
+		note = Note(title=form.title.data, body=form.body.data,
+					timestamp=datetime.utcnow(),
+					creator=creator)
+		db.session.add(note)
+		db.session.commit()
+		return redirect(url_for('notes'))
+
+	return render_template('notes-client.html', title='Notes',
+							user=g.user, notes=notes,
+							form=form)
+
 @app.route('/markdone/<int:id>')
 @login_required
 def markdone(id):
@@ -151,6 +177,17 @@ def deleteevent(id):
 	db.session.delete(event)
 	db.session.commit()
 	return redirect(url_for('calendar'))
+
+@app.route('/deletenote/<int:id>')
+@login_required
+def deletenote(id):
+	note = Note.query.get(id)
+	if note is None:
+		flash('This note does not exist')
+		return redirect(url_for('notes'))
+	db.session.delete(note)
+	db.session.commit()
+	return redirect(url_for('notes'))
 
 @app.route('/search', methods=['POST'])
 @login_required

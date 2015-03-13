@@ -40,9 +40,11 @@
 		</div>
 	</form>
 </div>
+<table class="table table-hover">
 {% for todo in todos.items %}
 	{% include 'todo.html' %}
 {% endfor %}
+</table>
 <ul class="pager">
 	{% if todos.has_prev %}
 	<li class="previous"><a href="{{ url_for('todolist', page=todos.prev_num) }}">Newer items</a></li>

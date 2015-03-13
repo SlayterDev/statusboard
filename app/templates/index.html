@@ -28,22 +28,34 @@
 			{% include 'flash.html' %}
 			<h1>Hello, Brad and/or Kara</h1>
 			<br>
-			<div style="width: 300px; float: left;">
+			<div style="width: 300px; height: 400px; float: left;">
 				<h4>Todo List:</h4>
+				<table class="table table-hover">
 				{% for todo in todos %}
 					{% include 'todo.html' %}
 				{% endfor %}
-				<a href="{{url_for('logout')}}">Logout</a>
+				</table>
 			</div>
 			<div style="width: 300px; float: left;">
 				<h4>Calendar:</h4>
+				<table class="table table-hover">
 				{% for event in events %}
 					{% include 'event.html' %}
 				{% endfor %}
+				</table>
 			</div>
 			<div style="width: 300px; height: 400px; float: left;">
 				<div id="txt" style="vertical-align: middle; display: table-cell;"></div>
 			</div>
+			<div style="width: 300px;">
+				<h4>Notes</h4>
+				<table class="table table-hover">
+				{% for note in notes %}
+					{% include 'note.html' %}
+				{% endfor %}
+				<table class="table table-hover">
+			</div>
+			<a href="{{url_for('logout')}}">Logout</a>
 		</div>
       </div>
     </div>
